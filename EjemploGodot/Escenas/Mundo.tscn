@@ -1,0 +1,60 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://Escenas/Mundo.gd" type="Script" id=1]
+[ext_resource path="res://Escenas/roca.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Sprites/textura.jpg" type="Texture" id=3]
+[ext_resource path="res://Escenas/Player.tscn" type="PackedScene" id=4]
+[ext_resource path="res://Escenas/Interfaz.tscn" type="PackedScene" id=5]
+
+[sub_resource type="Curve2D" id=1]
+_data = {
+"points": PoolVector2Array( 0, 0, 0, 0, -28.5301, -3.93683, 0, 0, 0, 0, 642.57, 1.22546, 0, 0, 0, 0, 637.408, 703.3, 0, 0, 0, 0, -23.3677, 687.813, 0, 0, 0, 0, -23.3677, 1.22546, 0, 0, 0, 0, -28.5301, -3.93683 )
+}
+
+[node name="Mundo" type="Node"]
+pause_mode = 2
+script = ExtResource( 1 )
+roca = ExtResource( 2 )
+
+[node name="TextureRect2" type="TextureRect" parent="."]
+margin_left = -258.659
+margin_top = 0.733215
+margin_right = 765.341
+margin_bottom = 1024.73
+texture = ExtResource( 3 )
+
+[node name="Player" parent="." instance=ExtResource( 4 )]
+position = Vector2( 306.462, 382.587 )
+
+[node name="rocaTimer" type="Timer" parent="."]
+wait_time = 0.26
+
+[node name="scoreTimer" type="Timer" parent="."]
+wait_time = 0.7
+
+[node name="inicioTimer" type="Timer" parent="."]
+wait_time = 2.0
+one_shot = true
+autostart = true
+
+[node name="posicionInicial" type="Position2D" parent="."]
+position = Vector2( 304.856, 382.464 )
+
+[node name="camino" type="Path2D" parent="."]
+editor/display_folded = true
+curve = SubResource( 1 )
+
+[node name="rocaPosicion" type="PathFollow2D" parent="camino"]
+position = Vector2( -28.5301, -3.93683 )
+rotation = 0.0076922
+
+[node name="RocaPos" type="PathFollow2D" parent="camino"]
+position = Vector2( -28.5301, -3.93683 )
+rotation = 0.0076922
+
+[node name="Interfaz" parent="." instance=ExtResource( 5 )]
+[connection signal="golpe" from="Player" to="." method="game_over"]
+[connection signal="timeout" from="rocaTimer" to="." method="_on_rocaTimer_timeout"]
+[connection signal="timeout" from="scoreTimer" to="." method="_on_scoreTimer_timeout"]
+[connection signal="timeout" from="inicioTimer" to="." method="_on_inicioTimer_timeout"]
+[connection signal="iniciar_juego" from="Interfaz" to="." method="nuevo_juego"]
